@@ -1,0 +1,18 @@
+cameras (0.3.0-0extras16.04.0) xenial; urgency=medium
+
+  * Added option to power off cameras
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Sat, 28 May 2016 07:59:50 +0200
+
+cameras (0.2.0-0extras16.04.0) xenial; urgency=medium
+
+  * Update for webcam
+  * Added refresh time for webcam
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Thu, 26 May 2016 23:18:48 +0200
+
+cameras (0.1.0-0extras16.04.0) xenial; urgency=medium
+
+  * First updated release
+
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Sat, 26 Mar 2016 15:08:45 +0100

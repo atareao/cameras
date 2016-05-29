@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Exec = /opt/extras.ubuntu.com/cameras/bin/cameras
+Hidden=false
+NoDisplay=false
+X-GNOME-Autostart-enabled=true
+Name=Cameras
+Comment=Cameras
+X-GNOME-Autostart-Delay=2

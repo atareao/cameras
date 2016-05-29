@@ -1,0 +1,8 @@
+bin/cameras /opt/extras.ubuntu.com/cameras/bin
+src/*.py /opt/extras.ubuntu.com/cameras/share/cameras
+debian/changelog /opt/extras.ubuntu.com/cameras/share/cameras
+data/extras-cameras.desktop /usr/share/applications
+data/extras-cameras-autostart.desktop /opt/extras.ubuntu.com/cameras/share/cameras
+data/icons/*.svg /opt/extras.ubuntu.com/cameras/share/icons
+data/social/*.svg /opt/extras.ubuntu.com/cameras/share/cameras/social
+data/images/*.svg /opt/extras.ubuntu.com/cameras/share/cameras/images

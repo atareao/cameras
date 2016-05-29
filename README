@@ -1,0 +1,34 @@
+=======
+cameras
+=======
+
+Put widgets in your desktop with a webcam
+
+============
+Requirements
+============
+
+Required dependencies:
+
+    gir1.2-gtk-3.0,
+    gir1.2-gdkpixbuf-2.0,
+    gir1.2-appindicator3-0.1,
+    gir1.2-notify-0.7,
+    gir1.2-gstreamer-1.0,
+    gir1.2-gst-plugins-base-1.0
+
+========
+Download
+========
+
+Download the package:
+
+    $ git clone https://github.com/atareao/cameras
+
+=======
+Install
+=======
+
+sudo add-apt-repository ppa:atareao/cameras
+sudo apt-get update
+sudo apt-get install cameras

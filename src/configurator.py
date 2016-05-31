@@ -35,7 +35,7 @@ class Configuration(object):
         try:
             return self.params[key]
         except KeyError as e:
-            print(e)
+            print('Error: ', e)
             self.params[key] = comun.PARAMS[key]
             return self.params[key]
 

@@ -72,6 +72,13 @@ PARAMS = {'cameras': [
           ],
           'autostart': False,
           'theme': 'light',
+          'webcam-x': 200,
+          'webcam-y': 200,
+          'webcam-onwidgettop': False,
+          'webcam-showintaskbar': False,
+          'webcam-onalldesktop': False,
+          'webcam-on': False,
+          'webcam-show': False,
           }
 
 APP = 'cameras'

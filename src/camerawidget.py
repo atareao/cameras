@@ -264,7 +264,7 @@ class CameraWidget(Gtk.Window):
             self.height = height
             self.resize(width, height)
             self.surface = surface
-            GObject.idle_add(self.queue_draw)
+            GLib.idle_add(self.queue_draw)
 
     def on_expose(self, widget, cr, data):
         if self.surface is not None:

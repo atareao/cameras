@@ -49,22 +49,21 @@ class WebcamWidget(Gtk.Window):
         'preferences': (GObject.SIGNAL_RUN_FIRST, GObject.TYPE_NONE, ()),
         }
 
-    def __init__(self, camera):
+    def __init__(self):
         Gtk.Window.__init__(self)
-        self.camera = camera
         self.set_title('Webcam')
         # self.set_icon_from_file(comun.ICON)
         if os.environ.get('DESKTOP_SESSION') == "ubuntu":
             self.set_type_hint(Gdk.WindowTypeHint.DOCK)
         else:
             self.set_type_hint(Gdk.WindowTypeHint.UTILITY)
-        #self.set_default_size(500, 400)
         self.supports_alpha = False
         self.set_decorated(False)
         self.set_border_width(0)
         self.set_accept_focus(False)
         self.set_app_paintable(True)
         self.set_skip_pager_hint(True)
+
         '''
         screen = self.get_screen()
         visual = screen.get_rgba_visual()
@@ -81,7 +80,7 @@ class WebcamWidget(Gtk.Window):
         self.add(vbox)
         # self.add(overlay)
         self.movie_window = Gtk.DrawingArea()
-        self.movie_window.set_size_request(500, 400)
+        self.movie_window.set_size_request(500, 375)
         vbox.pack_end(self.movie_window, False, False, 1)
         # overlay.add(self.movie_window)
         hbox = Gtk.Box.new(Gtk.Orientation.HORIZONTAL, 0)
@@ -151,28 +150,18 @@ class WebcamWidget(Gtk.Window):
             style_provider,
             Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
         )
-        self.is_above = camera['onwidgettop']
-        self.set_keep_above(camera['onwidgettop'])
-        self.is_set_keep_above(camera['onwidgettop'])
-        self.set_keep_below(not camera['onwidgettop'])
-        if camera['onalldesktop']:
-            self.stick()
-        else:
-            self.unstick()
-        self.move(camera['x'], camera['y'])
-        self.on.set_from_pixbuf(
-            GdkPixbuf.Pixbuf.new_from_file_at_scale(
-                os.path.join(comun.IMAGESDIR, 'off.svg'), 50, 50, 1))
-        self.is_on = False
         self.screen_changed(self)
-
         self.player = Gst.parse_launch("v4l2src ! autovideosink")
         bus = self.player.get_bus()
         bus.add_signal_watch()
         bus.enable_sync_message_emission()
         bus.connect("message", self.on_message)
         bus.connect("sync-message::element", self.on_sync_message)
+        self.on.set_from_pixbuf(
+            GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                os.path.join(comun.IMAGESDIR, 'off.svg'), 50, 50, 1))
 
+        self.load_preferences()
         self.show_all()
 
     def on_message(self, bus, message):
@@ -263,38 +252,36 @@ class WebcamWidget(Gtk.Window):
         self.emit('pinit', self.is_above)
         self.is_set_keep_above(self.is_above)
 
-    def on_downloaded(self, downloader, is_ok, surface, width, height):
-        if is_ok is True:
-            self.width = width
-            self.height = height
-            self.resize(width, height)
-            self.surface = surface
-            GObject.idle_add(self.queue_draw)
+    def load_preferences(self):
+        configuration = Configuration()
+        x = configuration.get('webcam-x')
+        y = configuration.get('webcam-y')
+        self.is_above = configuration.get('webcam-onwidgettop')
+        self.showintaskbar = configuration.get('webcam-showintaskbar')
+        self.onalldesktop = configuration.get('webcam-onalldesktop')
+        self.is_on = configuration.get('webcam-on')
+        self.set_keep_above(self.is_above)
+        self.is_set_keep_above(self.is_above)
+        self.set_keep_below(not self.is_above)
+        if self.onalldesktop:
+            self.stick()
+        else:
+            self.unstick()
+        self.move(x, y)
 
     def save_preferences(self):
-        configuration = Configuration()
-        x, y = self.get_position()
-        cameras = configuration.get('cameras')
-        found = False
-        for index, acamera in enumerate(cameras):
-            if acamera['url'] == 'webcam':
-                acamera['x'] = x
-                acamera['y'] = y
-                acamera['onwidgettop'] = self.is_above
-                cameras[index] = acamera
-                found = True
-        if found is False:
-            acamera = {}
-            acamera['url'] = 'webcam'
-            acamera['x'] = 200
-            acamera['y'] = 200
-            acamera['scale'] = 100
-            acamera['refresh-time'] = 10
-            acamera['onwidgettop'] = False
-            acamera['showintaskbar'] = False
-            acamera['onalldesktop'] = True
-            acamera['on'] = True
-        configuration.save()
+        try:
+            configuration = Configuration()
+            x, y = self.get_position()
+            configuration.set('webcam-x', x)
+            configuration.set('webcam-y', y)
+            configuration.set('webcam-onwidgettop', self.is_above)
+            configuration.set('webcam-showintaskbar', self.showintaskbar)
+            configuration.set('webcam-onalldesktop', self.onalldesktop)
+            configuration.set('webcam-on', self.is_on)
+            configuration.save()
+        except Exception as e:
+            print(e)
 
     def stop(self):
         self.stop_updater()
@@ -311,21 +298,10 @@ class WebcamWidget(Gtk.Window):
 
 
 def main():
-    Gst.init(None)
     GObject.threads_init()
-    acamera = {}
-    acamera['url'] = 'webcam'
-    acamera['x'] = 200
-    acamera['y'] = 200
-    acamera['scale'] = 100
-    acamera['refresh-time'] = 10
-    acamera['onwidgettop'] = False
-    acamera['showintaskbar'] = False
-    acamera['onalldesktop'] = True
-    acamera['on'] = True
-    wcw = WebcamWidget(acamera)
+    Gst.init(None)
+    wcw = WebcamWidget()
     wcw.show()
-    #wcw.start_updater()
     Gtk.main()
     exit(0)
 

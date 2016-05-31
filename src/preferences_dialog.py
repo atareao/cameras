@@ -103,6 +103,58 @@ class PreferencesDialog(Gtk.Dialog):
                        ypadding=5,
                        xoptions=Gtk.AttachOptions.SHRINK)
         # ***************************************************************
+        frame12 = Gtk.Frame.new(_('Webcam'))
+        vbox11.pack_start(frame12, False, True, 1)
+        table12 = Gtk.Table(4, 2, False)
+        frame12.add(table12)
+        label13 = Gtk.Label(_('Show')+':')
+        label13.set_alignment(0, 0.5)
+        table12.attach(label13, 0, 1, 1, 2,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.FILL)
+        self.webcam_show = Gtk.Switch()
+        self.webcam_show.set_active(False)
+        table12.attach(self.webcam_show, 1, 2, 1, 2,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.SHRINK)
+        label14 = Gtk.Label(_('Widget on top')+':')
+        label14.set_alignment(0, 0.5)
+        table12.attach(label14, 0, 1, 2, 3,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.FILL)
+        self.webcam_onwidgettop = Gtk.Switch()
+        self.webcam_onwidgettop.set_active(False)
+        table12.attach(self.webcam_onwidgettop, 1, 2, 2, 3,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.SHRINK)
+        label15 = Gtk.Label(_('Show in taskbar')+':')
+        label15.set_alignment(0, 0.5)
+        table12.attach(label15, 0, 1, 3, 4,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.FILL)
+        self.webcam_showintaskbar = Gtk.Switch()
+        self.webcam_showintaskbar.set_active(False)
+        table12.attach(self.webcam_showintaskbar, 1, 2, 3, 4,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.SHRINK)
+        label16 = Gtk.Label(_('Show on all desktop')+':')
+        label16.set_alignment(0, 0.5)
+        table12.attach(label16, 0, 1, 4, 5,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.FILL)
+        self.webcam_onalldesktop = Gtk.Switch()
+        self.webcam_onalldesktop.set_active(False)
+        table12.attach(self.webcam_onalldesktop, 1, 2, 4, 5,
+                       xpadding=5,
+                       ypadding=5,
+                       xoptions=Gtk.AttachOptions.SHRINK)
 
         #
         self.load_preferences()
@@ -267,8 +319,15 @@ class PreferencesDialog(Gtk.Dialog):
         configuration = Configuration()
         self.switch1.set_active(os.path.exists(comun.AUTOSTARTD))
         self.switch2.set_active(configuration.get('theme') == 'light')
-        cameras = configuration.get('cameras')
+        self.webcam_show.set_active(configuration.get('webcam-show'))
+        self.webcam_onwidgettop.set_active(
+            configuration.get('webcam-onwidgettop'))
+        self.webcam_showintaskbar.set_active(
+            configuration.get('webcam-showintaskbar'))
+        self.webcam_onalldesktop.set_active(
+            configuration.get('webcam-onalldesktop'))
         self.widgets = []
+        cameras = configuration.get('cameras')
         for index, acamera in enumerate(cameras):
             data = {}
             vbox11 = Gtk.VBox(spacing=5)
@@ -403,6 +462,13 @@ class PreferencesDialog(Gtk.Dialog):
             configuration.set('theme', 'light')
         else:
             configuration.set('theme', 'dark')
+        configuration.set('webcam-show', self.webcam_show.get_active())
+        configuration.set('webcam-onwidgettop',
+                          self.webcam_onwidgettop.get_active())
+        configuration.set('webcam-showintaskbar',
+                          self.webcam_showintaskbar.get_active())
+        configuration.set('webcam-onalldesktop',
+                          self.webcam_onalldesktop.get_active())
         new_cameras = []
         for awidget in self.widgets:
             exists = False

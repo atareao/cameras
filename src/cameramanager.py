@@ -23,14 +23,20 @@
 
 import gi
 try:
+    gi.require_version('Gst', '1.0')
     gi.require_version('Gtk', '3.0')
+    gi.require_version('GstVideo', '1.0')
 except Exception as e:
     print(e)
     exit(1)
 from gi.repository import Gtk
+from gi.repository import Gst
+from gi.repository import GdkX11
+from gi.repository import GstVideo
 from gi.repository import GObject
 from configurator import Configuration
 from camerawidget import CameraWidget
+from webcamwidget import WebcamWidget
 from preferences_dialog import PreferencesDialog
 
 
@@ -41,6 +47,10 @@ class CameraManager():
 
     def start(self):
         configuration = Configuration()
+        if configuration.get('webcam-show'):
+            wcw = WebcamWidget()
+            wcw.connect('preferences', self.on_preferences)
+            wcw.show()
         cameras = configuration.get('cameras')
         if len(cameras) > 0:
             for acamera in cameras:
@@ -74,6 +84,7 @@ class CameraManager():
 def main():
     import time
     GObject.threads_init()
+    Gst.init(None)
     cm = CameraManager()
     cm.start()
     Gtk.main()

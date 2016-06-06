@@ -30,6 +30,7 @@ except Exception as e:
     print(e)
     exit(1)
 from gi.repository import Gtk
+from gi.repository import GLib
 from gi.repository import Gst
 from gi.repository import GdkX11
 from gi.repository import GstVideo
@@ -44,13 +45,14 @@ class CameraManager():
 
     def __init__(self):
         self.cameras = []
+        self.wcw = None
 
     def start(self):
         configuration = Configuration()
         if configuration.get('webcam-show'):
-            wcw = WebcamWidget()
-            wcw.connect('preferences', self.on_preferences)
-            wcw.show()
+            self.wcw = WebcamWidget()
+            self.wcw.connect('preferences', self.on_preferences)
+            self.wcw.show()
         cameras = configuration.get('cameras')
         if len(cameras) > 0:
             for acamera in cameras:
@@ -77,13 +79,16 @@ class CameraManager():
             cm.destroy()
 
     def stop(self):
+        if self.wcw is not None:
+            self.wcw.stop()
+            self.wcw = None
         for camera in self.cameras:
             camera.stop()
 
 
 def main():
     import time
-    GObject.threads_init()
+    GLib.threads_init()
     Gst.init(None)
     cm = CameraManager()
     cm.start()

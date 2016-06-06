@@ -1,9 +1,9 @@
-cameras (0.4.0-0extras16.04.1) xenial; urgency=medium
+cameras (0.4.0-0extras16.04.2) xenial; urgency=medium
 
   * Now you can have your own webcam
   * Restart webcamwidget
 
- -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Mon, 06 Jun 2016 22:40:11 +0200
+ -- Lorenzo Carbonell <lorenzo.carbonell.cerezo@gmail.com>  Mon, 06 Jun 2016 23:17:16 +0200
 
 cameras (0.3.0-0extras16.04.0) xenial; urgency=medium
 

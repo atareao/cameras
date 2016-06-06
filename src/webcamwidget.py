@@ -284,7 +284,11 @@ class WebcamWidget(Gtk.Window):
             print(e)
 
     def stop(self):
-        self.stop_updater()
+        self.is_on = False
+        self.player.set_state(Gst.State.NULL)
+        self.on.set_from_pixbuf(
+            GdkPixbuf.Pixbuf.new_from_file_at_scale(
+                os.path.join(comun.IMAGESDIR, 'off.svg'), 50, 50, 1))
         self.destroy()
 
     def start_updater(self):
